@@ -1,6 +1,8 @@
 import Attendance from "../models/Attendance.js";
 import Payment from "../models/Payment.js";
 import User from "../models/User.js";
+import razorpay from "../config/razorpay.js";
+import crypto from "crypto";
 
 export const getMyBilling = async (req, res) => {
   const MEAL_PRICES = {
@@ -174,6 +176,70 @@ export const recordPayment = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to record payment",
+    });
+  }
+};
+
+export const createRazorpayOrder = async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    const order = await razorpay.orders.create({
+      amount: amount * 100, // ₹ → paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    });
+
+    res.json({
+      success: true,
+      order,
+      key: process.env.RAZORPAY_KEY_ID,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to create Razorpay order",
+    });
+  }
+};
+
+export const verifyRazorpayPayment = async (req, res) => {
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      amount,
+    } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body)
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed",
+      });
+    }
+
+    // Save payment
+    await Payment.create({
+      student: req.user._id,
+      amount,
+    });
+
+    res.json({
+      success: true,
+      message: "Payment successful",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Payment verification failed",
     });
   }
 };

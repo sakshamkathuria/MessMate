@@ -1,5 +1,5 @@
 import express from "express";
-import { getMyBilling, recordPayment, getAdminBillingSummary } from "../controllers/billing.controller.js";
+import { getMyBilling, recordPayment, getAdminBillingSummary,createRazorpayOrder,verifyRazorpayPayment} from "../controllers/billing.controller.js";
 import { protect } from "../middleware/authMiddleware.js";
 import roleMiddleware from "../middleware/role.middleware.js";
 
@@ -13,5 +13,9 @@ router.post("/record",protect,roleMiddleware("admin"),recordPayment);
 
 // Admin: get billing summary for all students
 router.get("/billing-summary", protect, roleMiddleware("admin"), getAdminBillingSummary);
+
+router.post("/create-order",protect,roleMiddleware("student"),createRazorpayOrder);
+
+router.post("/verify",protect,roleMiddleware("student"),verifyRazorpayPayment);
 
 export default router;

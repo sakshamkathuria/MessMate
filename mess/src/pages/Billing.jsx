@@ -7,11 +7,79 @@ import toast from "react-hot-toast";
 const Billing = () => {
   const [billing, setBilling] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [paying, setPaying] = useState(false);
+
+  const handlePayNow = async () => {
+    try {
+      setPaying(true);
+
+      // Pay the entire outstanding balance (all-time pending)
+      const amount = billing?.pendingAll ?? 0;
+
+      // 1️⃣ Create Razorpay order
+      const res = await api.post("/payments/create-order", {
+        amount,
+      });
+
+      const { order, key } = res.data;
+
+      // 2️⃣ Open Razorpay
+      const options = {
+        key,
+        amount: order.amount,
+        currency: "INR",
+        name: "MessMate",
+        description: "Mess Fee Payment",
+        order_id: order.id,
+
+        handler: async function (response) {
+          // 3️⃣ Verify payment
+          await api.post("/payments/verify", {
+            ...response,
+            amount,
+          });
+
+          toast.success("Payment successful");
+
+          // Refresh billing
+          const now = new Date();
+          const month = now.getMonth() + 1;
+          const year = now.getFullYear();
+
+          const updated = await api.get("/billing/me", {
+            params: { month, year },
+          });
+
+          setBilling(updated.data);
+          setPaying(false);
+        },
+
+        theme: {
+          color: "#f97316",
+        },
+      };
+
+      const razor = new window.Razorpay(options);
+      razor.open();
+
+      razor.on("payment.failed", () => {
+        toast.error("Payment failed");
+        setPaying(false);
+      });
+    } catch (err) {
+      toast.error("Unable to initiate payment");
+      setPaying(false);
+    }
+  };
+
   // previous months pending (exclude this month's due)
   const prevPending = Math.max(
     (billing?.pendingAll ?? 0) - (billing?.summary?.total ?? 0),
     0
   );
+
+  // Total outstanding to be paid (all previous + current)
+  const totalPending = billing?.pendingAll ?? 0;
 
   useEffect(() => {
     const now = new Date();
@@ -100,7 +168,7 @@ const Billing = () => {
             <div>
               <p className="text-gray-600">Total Due</p>
               <h2 className="text-3xl font-bold text-orange-500 mt-1">
-                ₹{billing?.summary?.total || 0}
+                ₹{totalPending}
               </h2>
             </div>
             <IndianRupee size={28} className="text-orange-500" />
@@ -208,9 +276,11 @@ const Billing = () => {
         </div>
 
         <button
-          className="px-6 py-3 rounded-xl bg-orange-500 text-white font-medium justify-center flex mx-auto mt-6"
+          onClick={handlePayNow}
+          disabled={paying || totalPending === 0}
+          className="px-6 py-3 rounded-xl bg-orange-500 text-white font-medium justify-center flex mx-auto mt-6 hover:bg-orange-600 transition disabled:opacity-50"
         >
-          Pay Now
+          {paying ? "Processing Payment..." : `Pay Now (₹${totalPending})`}
         </button>
       </div>
     </div>
