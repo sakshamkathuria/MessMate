@@ -11,7 +11,17 @@ import billingRoutes from "./routes/billing.routes.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://mess-mate-liard.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -25,5 +35,9 @@ app.use("/api/billing", billingRoutes);
 app.use("/api/admin", billingRoutes);
 
 app.use("/api/payments", billingRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Server is running" });
+});
 
 export default app;
