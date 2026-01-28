@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await api.get("/auth/me");
+        const res = await axios.get("/auth/me");
         setUser(res.data.user);
       } catch (err) {
         logout();
