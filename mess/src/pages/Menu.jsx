@@ -56,41 +56,43 @@ const Menu = () => {
 
       {/* Day Selector */}
         <div className="max-w-3xl mx-auto mb-12">
-        <div className="bg-[#f7f3ed] px-6 py-2 rounded-3xl shadow-sm">
-            <div className="flex justify-center gap-3">
-            {days.map((day) => {
+          <div className="bg-[#f7f3ed] px-3 py-3 rounded-3xl shadow-sm">
+            
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide md:justify-center">
+              {days.map((day) => {
                 const isActive = activeDay === day;
 
                 return (
-                <button
+                  <button
                     key={day}
                     onClick={() => setActiveDay(day)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition
-                    ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap
+                      ${
                         isActive
-                        ? "bg-orange-500 text-white"
-                        : "text-gray-600 hover:text-orange-500"
-                    }`}
-                >
+                          ? "bg-orange-500 text-white"
+                          : "text-gray-600 hover:text-orange-500"
+                      }`}
+                  >
                     {day}
 
-              {day === todayName && (
-                    <span
+                    {day === todayName && (
+                      <span
                         className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold
-                        ${
+                          ${
                             isActive
-                            ? "bg-white text-orange-500"
-                            : "bg-orange-100 text-orange-500"
-                        }`}
-                    >
+                              ? "bg-white text-orange-500"
+                              : "bg-orange-100 text-orange-500"
+                          }`}
+                      >
                         Today
-                    </span>
+                      </span>
                     )}
-                </button>
+                  </button>
                 );
-            })}
+              })}
             </div>
-        </div>
+
+          </div>
         </div>
 
       {/* Meal Cards */}

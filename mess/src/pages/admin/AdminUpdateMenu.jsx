@@ -75,22 +75,28 @@ const AdminUpdateMenu = () => {
         </div>
 
         {/* Day Selector */}
-        <div className="bg-[#f7f3ed] max-w-3xl mx-auto rounded-full px-4 py-3 flex gap-2 justify-center">
-          {days.map((day) => (
-            <button
-              key={day}
-              onClick={() => setActiveDay(day)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition
-                ${
-                  activeDay === day
-                    ? "bg-green-500 text-white"
-                    : "text-gray-600 hover:bg-gray-200"
-                }`}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-[#f7f3ed] px-3 py-3 rounded-3xl shadow-sm">
+
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide md:justify-center">
+                {days.map((day) => (
+                  <button
+                    key={day}
+                    onClick={() => setActiveDay(day)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition whitespace-nowrap
+                      ${
+                        activeDay === day
+                          ? "bg-green-500 text-white"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+
+            </div>
+          </div>
 
         {/* Meal Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
