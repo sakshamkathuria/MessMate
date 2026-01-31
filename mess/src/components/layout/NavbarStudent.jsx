@@ -38,6 +38,7 @@ const Navbar = () => {
           <NavLink to="/menu" className={linkClass}>Menu</NavLink>
           <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
           <NavLink to="/billing" className={linkClass}>Billing</NavLink>
+          <NavLink to="/feedback" className={linkClass}>Feedback</NavLink>
 
           {user?.role === "admin" && (
             <NavLink to="/admin" className={linkClass}>Admin</NavLink>
@@ -83,6 +84,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/billing" onClick={() => setOpen(false)} className={linkClass}>
             Billing
+          </NavLink>
+          <NavLink to="/feedback" onClick={() => setOpen(false)} className={linkClass}>
+            Feedback
           </NavLink>
 
           {user?.role === "admin" && (

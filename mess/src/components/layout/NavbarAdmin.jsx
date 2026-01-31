@@ -44,6 +44,9 @@ const NavbarAdmin = () => {
           <NavLink to="/admin/menu" className={linkClass}>
             Menu
           </NavLink>
+          <NavLink to="/feedback" className={linkClass}>
+            Feedback
+          </NavLink>
         </div>
 
         {/* Desktop Auth Button */}
@@ -99,6 +102,14 @@ const NavbarAdmin = () => {
             className={linkClass}
           >
             Menu
+          </NavLink>
+
+          <NavLink
+            to="/feedback"
+            onClick={() => setOpen(false)}
+            className={linkClass}
+          >
+            Feedback
           </NavLink>
 
           <div className="pt-2">

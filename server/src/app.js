@@ -9,6 +9,8 @@ import menuRoutes from "./routes/menu.routes.js";
 
 import billingRoutes from "./routes/billing.routes.js";
 
+import feedbackRoutes from "./routes/feedbackRoutes.js";
+
 const app = express();
 
 app.use(
@@ -39,5 +41,7 @@ app.use("/api/payments", billingRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is running" });
 });
+
+app.use("/api/feedback", feedbackRoutes);
 
 export default app;

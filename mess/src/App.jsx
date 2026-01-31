@@ -6,6 +6,7 @@ import Menu from "./pages/Menu";
 import Dashboard from "./pages/Dashboard";
 import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
+import Feedback from "./pages/Feedback";
 
 import AppLayout from "./components/layout/AppLayout";
 import Footer from "./components/layout/Footer";
@@ -56,6 +57,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/feedback" element={<Feedback />} />
 
           {/* Admin */}
           <Route
@@ -79,6 +81,15 @@ const App = () => {
             element={
               <ProtectedRoute role="admin">
                 <AdminUpdateMenu />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/feedback"
+            element={
+              <ProtectedRoute role="admin">
+                <Feedback />
               </ProtectedRoute>
             }
           />
