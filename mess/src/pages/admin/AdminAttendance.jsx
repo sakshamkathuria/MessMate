@@ -67,9 +67,16 @@ const AdminAttendance = () => {
   const markAll = () => {
     setAttendance((prev) => {
       const updated = { ...prev };
+
       students.forEach((s) => {
-        visibleMeals.forEach((m) => (updated[s.id][m] = true));
+        visibleMeals.forEach((m) => {
+          if (!updated[s._id]) {
+            updated[s._id] = { breakfast: false, lunch: false, dinner: false };
+          }
+          updated[s._id][m] = true;
+        });
       });
+
       return updated;
     });
   };
@@ -77,9 +84,16 @@ const AdminAttendance = () => {
   const clearAll = () => {
     setAttendance((prev) => {
       const updated = { ...prev };
+
       students.forEach((s) => {
-        visibleMeals.forEach((m) => (updated[s.id][m] = false));
+        visibleMeals.forEach((m) => {
+          if (!updated[s._id]) {
+            updated[s._id] = { breakfast: false, lunch: false, dinner: false };
+          }
+          updated[s._id][m] = false;
+        });
       });
+
       return updated;
     });
   };
