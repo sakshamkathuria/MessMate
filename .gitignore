@@ -7,6 +7,7 @@ server/node_modules/
 .env
 mess/.env
 server/.env
+mess/src/.env
 
 # Build Files
 mess/dist/
